@@ -131,6 +131,7 @@ nav h1 a {
   width: 100%;
   background-color: #3397DB;
   align-items: center;
+  padding: 15px 0;
 }
 .filter-options h2 {
   color: white;
