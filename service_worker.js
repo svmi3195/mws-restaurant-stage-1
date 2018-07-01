@@ -22,4 +22,29 @@ self.addEventListener('install', function(event) {
         });
       })
     );
-  });
+});
+
+self.addEventListener('fetch', function(event) {
+  if(event.request.url.hostname !== 'localhost'){
+    event.request.mode = "no-cors";
+  }
+  if(event.request.url.indexOf('restaurant.html' !== -1)){
+    event.request = new Request("restaurant.html");
+  }
+  event.respondWith(
+    caches.match(event.request).then(function(response) {
+      return response || fetch(event.request)
+      .then(function (response){
+          return caches.open(cacheName)
+          .then(function(cache){
+              cache.put(event.request, response.clone());
+              return response;
+          });
+      })
+      .catch(function(error){
+          return new Response('No connection to the Internet!')
+      })
+    })
+  );
+});
+  
