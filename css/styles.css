@@ -217,7 +217,7 @@ nav h1 a {
 }
 
 #restaurants-list li button {
-  background-color: orange;
+  background-color: #996300;
   border-bottom: 3px solid #eee;
   color: #fff;
   display: inline-block;
@@ -247,7 +247,7 @@ nav h1 a {
 }
 
 #restaurant-name {
-  color: #f18200;
+  color: #996300;
   font-family: Arial,sans-serif;
   font-size: 1.6rem;
   font-weight: 200;
@@ -287,7 +287,7 @@ nav h1 a {
 }
 
 #reviews-container h2 {
-  color: #f58500;
+  color: #996300;
   font-size: 2rem;
   font-weight: 300;
   letter-spacing: -1px;
