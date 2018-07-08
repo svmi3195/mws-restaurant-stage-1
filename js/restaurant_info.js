@@ -91,6 +91,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const photo = DBHelper.imageUrlForRestaurant(restaurant);
   const thumbnail = photo.replace(/img\//, 'img/thumbnails_').replace(/\./, '_1x.');
   image.srcset = thumbnail + ' 300w, ' + thumbnail.replace(/1x/, '2x') + ' 600w, ' + photo + ' 800w';
+  image.src = photo;
   image.sizes = '(max-width: 300px) 300px, (max-width: 600px) 600px, 800px"';
   image.alt = 'image of the restaurant ' + restaurant.name;
 
