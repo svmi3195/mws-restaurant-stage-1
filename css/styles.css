@@ -264,6 +264,7 @@ nav h1 a {
 #restaurant-address {
   font-size: 1rem;
   margin: 10px 0px;
+  font-weight: 600;
 }
 
 #restaurant-cuisine {
