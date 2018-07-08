@@ -314,6 +314,10 @@ nav h1 a {
   margin: 0 0 10px;
 }
 
+#restaurant-hours {
+  margin: 20px auto 0 auto;
+}
+
 #restaurant-hours td {
   color: #666;
 }
