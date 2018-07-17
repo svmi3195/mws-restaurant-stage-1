@@ -1,8 +1,8 @@
 let restaurants,
   neighborhoods,
   cuisines
-var newMap
-var markers = []
+let newMap
+let markers = []
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
