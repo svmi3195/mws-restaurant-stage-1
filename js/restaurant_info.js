@@ -88,7 +88,7 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img';  
-  const photo = DBHelper.imageUrlForRestaurant(restaurant);
+  const photo = DBHelper.imageUrlForRestaurant(restaurant) + '.jpg';
   const thumbnail = photo.replace(/img\//, 'img/thumbnails_').replace(/\./, '_1x.');
   image.srcset = thumbnail + ' 300w, ' + thumbnail.replace(/1x/, '2x') + ' 600w, ' + photo + ' 800w';
   image.src = photo;
