@@ -1,0 +1,9 @@
+{
+  "name": "Restaurant Reviews",
+  "short_name": "RR",
+  "display": "standalone",
+  "description": "Restaurant reviews site",
+  "background_color": "#fff",
+  "theme_color": "#333",
+  "version": "0.2"
+}
