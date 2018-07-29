@@ -3,8 +3,8 @@
   "short_name": "RR",
   "display": "standalone",
   "description": "Restaurant reviews site",
-  "background_color": "#fff",
-  "theme_color": "#333",
+  "background_color": "#333",
+  "theme_color": "#ffa500",
   "version": "0.2",
   "icons": [
     {
