@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/svmi3195/mws-restaurant-stage-1/issues"
   },
-  "homepage": "https://github.com/svmi3195/mws-restaurant-stage-1#readme"
+  "homepage": "https://github.com/svmi3195/mws-restaurant-stage-1#readme",
+  "devDependencies": {
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0"
+  }
 }
