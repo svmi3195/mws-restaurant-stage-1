@@ -1,3 +1,5 @@
+import idb from 'idb';
+
 let cacheName = "mws-restaurant-app-001";
 
 self.addEventListener('install', function(event) {
