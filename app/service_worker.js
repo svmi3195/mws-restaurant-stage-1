@@ -1,5 +1,12 @@
 import idb from 'idb';
 
+const name = 'mws-restaurant-reviews-db';
+const version = 1;
+
+idb.open(name, version, upgradeDB => {
+  upgradeDB.createObjectStore('store 1')
+}).then(db => console.log('success'))
+
 let cacheName = "mws-restaurant-app-001";
 
 self.addEventListener('install', function(event) {
