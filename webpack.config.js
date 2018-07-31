@@ -5,5 +5,8 @@ module.exports = {
   output: {
     filename: 'bundled_sw.js',
     path: path.resolve(__dirname, 'app')
+  },
+  devServer: {
+    contentBase: './app'
   }
 }

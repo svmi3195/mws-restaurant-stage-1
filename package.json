@@ -5,6 +5,7 @@
   "main": "\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C",
   "scripts": {
     "dev": "webpack --mode development --watch",
+    "start": "webpack-dev-server --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,7 +20,8 @@
   "homepage": "https://github.com/svmi3195/mws-restaurant-stage-1#readme",
   "devDependencies": {
     "webpack": "^4.16.3",
-    "webpack-cli": "^3.1.0"
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
   },
   "dependencies": {
     "idb": "^2.1.3"
