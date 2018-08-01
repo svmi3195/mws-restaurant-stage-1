@@ -21,7 +21,7 @@ self.addEventListener('install', function(event) {
             '/js/dbhelper.js',
             '/js/main.js',
             '/js/register.js',
-            '/js/restaurant_info.js'
+            '/js/restaurant_info.js'            
           ]
         )
         .catch(function(error){
@@ -49,7 +49,7 @@ self.addEventListener('fetch', function(event) {
           });
       })
       .catch(function(error){
-          return new Response('No connection to the Internet!')
+        return new Response('No connection to the Internet!')
       })
     })
   );
