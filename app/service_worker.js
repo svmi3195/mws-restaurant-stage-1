@@ -8,7 +8,16 @@ const idbPromise = idb.open(name, version, upgradeDB => {
     case 0:
       upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});    
   }  
-}); 
+});
+
+idbPromise.then(db => {
+  const tx = db.transaction('restaurants', 'readwrite');
+  tx.objectStore('restaurants').put({
+    id: 42,
+    'data': 'bar'
+  });
+  return tx.complete;
+}).then(() => console.log("Done!"));
 
 let cacheName = "mws-restaurant-app-001";
 
