@@ -3,9 +3,12 @@ import idb from 'idb';
 const name = 'mws-restaurant-reviews-db';
 const version = 1;
 
-idb.open(name, version, upgradeDB => {
-  upgradeDB.createObjectStore('store 1')
-}).then(db => console.log('success'))
+const idbPromise = idb.open(name, version, upgradeDB => {
+  switch (upgradeDB.oldVersion){
+    case 0:
+      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});    
+  }  
+}); 
 
 let cacheName = "mws-restaurant-app-001";
 
