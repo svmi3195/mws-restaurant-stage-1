@@ -49,17 +49,18 @@ self.addEventListener('fetch', function(event) {
 
     fetch(event.request)
       .then(response => response.json())
-      .then(data => {console.log(data)})
-      .catch(err => {console.log(err)})    
-
-    idbPromise.then(db => {
-      const tx = db.transaction('restaurants', 'readwrite');
-      tx.objectStore('restaurants').put({
-        id: 123456,
-        data: {foo: "bar"}
-      });
-      return tx.complete; 
-    });
+      .then(data => {
+        return idbPromise.then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          tx.objectStore('restaurants').put({
+            id: 123456,
+            data: data
+          });
+          return tx.complete; 
+        });
+      })
+      .catch(err => {console.log(err)});
+    
   }else{
     event.respondWith(    
       caches.match(chachedReq).then(function(response) {
