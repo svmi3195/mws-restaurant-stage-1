@@ -1,5 +1,5 @@
 import idb from 'idb';
-
+console.log('x')
 const name = 'mws-restaurant-reviews-db';
 const version = 1;
 
@@ -10,18 +10,10 @@ const idbPromise = idb.open(name, version, upgradeDB => {
   }  
 });
 
-idbPromise.then(db => {
-  const tx = db.transaction('restaurants', 'readwrite');
-  tx.objectStore('restaurants').put({
-    id: 42,
-    'data': 'bar'
-  });
-  return tx.complete;
-}).then(() => console.log("Done!"));
-
 let cacheName = "mws-restaurant-app-001";
 
 self.addEventListener('install', function(event) {
+  console.log('xx')
     event.waitUntil(
       caches.open(cacheName).then(function(cache) {
         return cache.addAll(
@@ -44,14 +36,17 @@ self.addEventListener('install', function(event) {
 });
 
 self.addEventListener('fetch', function(event) {
+  console.log('xxx')
+  /*
   if(event.request.url.hostname !== 'localhost'){
     event.request.mode = "no-cors";
-  }
+  }*/
+  let chachedReq;
   if(event.request.url.indexOf('restaurant.html' !== -1)){
-    event.request = new Request("restaurant.html");
+    chachedReq = new Request("restaurant.html");
   }
-  event.respondWith(
-    caches.match(event.request).then(function(response) {
+  event.respondWith(    
+    caches.match(chachedReq).then(function(response) {
       return response || fetch(event.request)
       .then(function (response){
           return caches.open(cacheName)
