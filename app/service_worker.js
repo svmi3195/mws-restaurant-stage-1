@@ -1,5 +1,4 @@
 import idb from 'idb';
-console.log('x')
 const name = 'mws-restaurant-reviews-db';
 const version = 1;
 
@@ -13,7 +12,6 @@ const idbPromise = idb.open(name, version, upgradeDB => {
 let cacheName = "mws-restaurant-app-001";
 
 self.addEventListener('install', function(event) {
-  console.log('xx')
     event.waitUntil(
       caches.open(cacheName).then(function(cache) {
         return cache.addAll(
@@ -33,10 +31,10 @@ self.addEventListener('install', function(event) {
         });
       })
     );
-});
+}); 
 
 self.addEventListener('fetch', function(event) {
-  console.log('xxx')
+  console.log('Handling fetch event for', event.request.url);
   /*
   if(event.request.url.hostname !== 'localhost'){
     event.request.mode = "no-cors";
