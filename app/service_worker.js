@@ -31,10 +31,10 @@ self.addEventListener('install', function(event) {
         });
       })
     );
-}); 
+});
 
 self.addEventListener('fetch', function(event) {
-  console.log('Handling fetch event for', event.request.url);
+  //console.log('Handling fetch event for ' + event.request.url);
   /*
   if(event.request.url.hostname !== 'localhost'){
     event.request.mode = "no-cors";
@@ -43,20 +43,25 @@ self.addEventListener('fetch', function(event) {
   if(event.request.url.indexOf('restaurant.html' !== -1)){
     chachedReq = new Request("restaurant.html");
   }
-  event.respondWith(    
-    caches.match(chachedReq).then(function(response) {
-      return response || fetch(event.request)
-      .then(function (response){
-          return caches.open(cacheName)
-          .then(function(cache){
-              cache.put(event.request, response.clone());
-              return response;
-          });
+
+  if(event.request.url.indexOf('1337/restaurants') != -1){
+    console.log('fetching restaurants from 1337')
+  }else{
+    event.respondWith(    
+      caches.match(chachedReq).then(function(response) {
+        return response || fetch(event.request)
+        .then(function (response){
+            return caches.open(cacheName)
+            .then(function(cache){
+                cache.put(event.request, response.clone());
+                return response;
+            });
+        })
+        .catch(function(error){
+          return new Response('No connection to the Internet!')
+        })
       })
-      .catch(function(error){
-        return new Response('No connection to the Internet!')
-      })
-    })
-  );
+    );
+  }  
 });
   
