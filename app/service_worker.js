@@ -46,13 +46,19 @@ self.addEventListener('fetch', function(event) {
 
   if(event.request.url.indexOf('1337/restaurants') != -1){
     console.log('fetching restaurants from 1337');
+
+    fetch(event.request)
+      .then(response => response.json())
+      .then(data => {console.log(data)})
+      .catch(err => {console.log(err)})    
+
     idbPromise.then(db => {
       const tx = db.transaction('restaurants', 'readwrite');
       tx.objectStore('restaurants').put({
         id: 123456,
         data: {foo: "bar"}
       });
-      return tx.complete;
+      return tx.complete; 
     });
   }else{
     event.respondWith(    
