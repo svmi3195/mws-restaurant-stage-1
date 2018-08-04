@@ -48,7 +48,14 @@ self.addEventListener('fetch', function(event) {
     console.log('fetching restaurants from 1337');
 
     event.respondWith(
-      fetch(event.request)
+      idbPromise.then(db => {
+        return db.transaction('restaurants')
+          .objectStore('restaurants').get(1);
+      }).then(obj => {
+        console.log('Got data from idb');
+        console.log(obj);
+      
+      return fetch(event.request)
       .then(response => response.json())
       .then(data => {
         return idbPromise.then(db => {
@@ -66,7 +73,7 @@ self.addEventListener('fetch', function(event) {
       .catch(err => {
         return new Response('Error fetching from the server: ' + err)
       })
-    );
+      }));
   }else{
     event.respondWith(    
       caches.match(chachedReq).then(function(response) {
