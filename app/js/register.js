@@ -4,7 +4,7 @@ if ('serviceWorker' in navigator) {
       navigator.serviceWorker.
       register('/bundled_sw.js')
       .then(function(registration) {
-        console.log('Registration successful, scope is:', registration.scope);
+        //console.log('Registration successful, scope is:', registration.scope);
       })
       .catch(err => {console.log(err)})
     });

@@ -45,16 +45,16 @@ self.addEventListener('fetch', function(event) {
   }
 
   if(event.request.url.indexOf('1337/restaurants') != -1){
-    console.log('fetching restaurants from 1337');
+    //console.log('fetching restaurants from 1337');
 
     event.respondWith(
       idbPromise.then(db => {
         return db.transaction('restaurants')
           .objectStore('restaurants').get(1);
       }).then(obj => {
-        if(obj){
-          console.log('Got data from idb');
-          console.log(obj.data);
+        if(obj && obj.data){
+          //console.log('Got data from idb');
+          //console.log(obj.data);
           return new Response(JSON.stringify(obj.data));
         }else{
           return fetch(event.request)
