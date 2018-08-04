@@ -74,7 +74,7 @@ self.addEventListener('fetch', function(event) {
             })
             .catch(err => {
               return new Response('Error fetching from the server: ' + err)
-            })
+            }) 
         }
       }));
   }else{
