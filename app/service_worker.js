@@ -52,27 +52,30 @@ self.addEventListener('fetch', function(event) {
         return db.transaction('restaurants')
           .objectStore('restaurants').get(1);
       }).then(obj => {
-        console.log('Got data from idb');
-        console.log(obj);
-      
-      return fetch(event.request)
-      .then(response => response.json())
-      .then(data => {
-        return idbPromise.then(db => {
-          const tx = db.transaction('restaurants', 'readwrite');
-          tx.objectStore('restaurants').put({
-            id: 1,
-            data: data
-          });
-          return data; 
-        })
-      .then(res => {
-        return new Response(JSON.stringify(res))
-      })
-      })
-      .catch(err => {
-        return new Response('Error fetching from the server: ' + err)
-      })
+        if(obj){
+          console.log('Got data from idb');
+          console.log(obj.data);
+          return new Response(JSON.stringify(obj.data));
+        }else{
+          return fetch(event.request)
+            .then(response => response.json())
+            .then(data => {
+              return idbPromise.then(db => {
+                const tx = db.transaction('restaurants', 'readwrite');
+                tx.objectStore('restaurants').put({
+                  id: 1,
+                  data: data
+                });
+                return data;
+              })
+                .then(res => {
+                  return new Response(JSON.stringify(res))
+                })
+            })
+            .catch(err => {
+              return new Response('Error fetching from the server: ' + err)
+            })
+        }
       }));
   }else{
     event.respondWith(    
