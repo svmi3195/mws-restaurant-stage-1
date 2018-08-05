@@ -1,7 +1,7 @@
 {
   "name": "y",
   "version": "1.0.0",
-  "description": "training project for shcolarship\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[D\u001b[Drestaurants review project for shcolarship",
+  "description": "training project for shcolarship",
   "main": "\u001b[D\u001b[D\u001b[D\u001b[C\u001b[C\u001b[C",
   "scripts": {
     "dev": "webpack --mode development --watch",
