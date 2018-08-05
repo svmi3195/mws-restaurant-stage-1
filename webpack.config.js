@@ -8,6 +8,7 @@ module.exports = {
     path: path.resolve(__dirname, 'app')
   },
   devServer: {
-    contentBase: './app'
+    contentBase: './app',
+    port: 8080
   }
 }

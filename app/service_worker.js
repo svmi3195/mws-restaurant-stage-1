@@ -23,7 +23,7 @@ self.addEventListener('install', function(event) {
             '/js/dbhelper.js',
             '/js/main.js',
             '/js/register.js',
-            '/js/restaurant_info.js'            
+            '/js/restaurant_info.js'         
           ]
         )
         .catch(function(error){
@@ -35,26 +35,18 @@ self.addEventListener('install', function(event) {
 
 self.addEventListener('fetch', function(event) {
   //console.log('Handling fetch event for ' + event.request.url);
-  /*
-  if(event.request.url.hostname !== 'localhost'){
-    event.request.mode = "no-cors";
-  }*/
-  let chachedReq;
-  if(event.request.url.indexOf('restaurant.html' !== -1)){
+  let chachedReq = event.request;
+  if(event.request.url.indexOf('restaurant.html') != -1){
     chachedReq = new Request("restaurant.html");
   }
 
   if(event.request.url.indexOf('1337/restaurants') != -1){
-    //console.log('fetching restaurants from 1337');
-
     event.respondWith(
       idbPromise.then(db => {
         return db.transaction('restaurants')
           .objectStore('restaurants').get(1);
       }).then(obj => {
         if(obj && obj.data){
-          //console.log('Got data from idb');
-          //console.log(obj.data);
           return new Response(JSON.stringify(obj.data));
         }else{
           return fetch(event.request)
@@ -78,7 +70,7 @@ self.addEventListener('fetch', function(event) {
         }
       }));
   }else{
-    event.respondWith(    
+    event.respondWith(  
       caches.match(chachedReq).then(function(response) {
         return response || fetch(event.request)
         .then(function (response){
