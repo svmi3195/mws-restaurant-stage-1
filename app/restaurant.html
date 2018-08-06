@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="description" content="Restaurant reviews: restaurant details">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffa500"/>  
+  <meta name="theme-color" content="#ffa500" />
   <link rel="manifest" href="/manifest.json">
   <title>Restaurant Info</title>
 </head>
@@ -15,11 +15,15 @@
   <header>
     <!-- Beginning nav -->
     <nav>
-      <h1><a href="/">Restaurant Reviews</a></h1>
+      <h1>
+        <a href="/">Restaurant Reviews</a>
+      </h1>
     </nav>
     <!-- Beginning breadcrumb -->
     <ul id="breadcrumb" aria-label="breadcrumb">
-      <li><a href="/">Home</a></li>
+      <li>
+        <a href="/">Home</a>
+      </li>
     </ul>
     <!-- End breadcrumb -->
     <!-- End nav -->
@@ -46,21 +50,44 @@
     <section id="reviews-container">
       <ul id="reviews-list"></ul>
     </section>
+    <section id="add-review-container">
+      <h3>Add review</h3>
+      <form id="add-review">
+        <label>Name:</label>
+        <input type="text" placeholder="your name">
+        <label>Score:</label>
+        <select>
+          <option>5</option>
+          <option>4</option>
+          <option>3</option>
+          <option>2</option>
+          <option>1</option>
+        </select>
+        <label>Review:</label>
+        <textarea placeholder="your review here"></textarea>
+        <button type="submit">Submit</button>
+      </form>
+    </section>
     <!-- End reviews -->
   </main>
   <!-- End main -->
 
   <!-- Beginning footer -->
   <footer id="footer">
-    Copyright (c) 2017 <a href="/"><strong>Restaurant Reviews</strong></a> All Rights Reserved.
+    Copyright (c) 2017
+    <a href="/">
+      <strong>Restaurant Reviews</strong>
+    </a> All Rights Reserved.
   </footer>
-  <!-- End footer -->  
+  <!-- End footer -->
   <!-- Normalize.css for better cross-browser consistency -->
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
-  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ=="
+    crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
+    crossorigin=""></script>
   <!-- Beginning scripts -->
   <script src="js/register.js"></script>
   <!-- Database helpers -->
@@ -68,7 +95,7 @@
   <!-- Main javascript file -->
   <script src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
- <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_tKbW6A5pQ-eupxI56myUnHLqYCzOjKo&libraries=places&callback=initMap"></script> -->
+  <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_tKbW6A5pQ-eupxI56myUnHLqYCzOjKo&libraries=places&callback=initMap"></script> -->
   <!-- End scripts -->
 
 </body>

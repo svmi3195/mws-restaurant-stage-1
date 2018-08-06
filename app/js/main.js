@@ -174,7 +174,7 @@ createRestaurantHTML = (restaurant) => {
   favourite.innerHTML = '❤';
   favourite.className = 'btn-favourite';
   favourite.onclick = function(){
-    console.log('favourite');
+    console.log('favourite ' + restaurant.name);
   }  
   li.append(favourite)
 

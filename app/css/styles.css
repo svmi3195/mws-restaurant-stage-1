@@ -81,6 +81,20 @@ section {
   text-transform: uppercase;
 }
 
+/* ====================== Default button ====================== */
+button {
+  background-color: #996300;
+  border-bottom: 3px solid #eee;
+  color: #fff;
+  display: inline-block;
+  font-size: 1rem;
+  margin: 15px 0 0;
+  padding: 8px 30px 10px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
 /* ====================== Navigation ====================== */
 nav {
   padding: 25px 0;
@@ -216,19 +230,6 @@ nav h1 a {
   font-size: 0.95rem;
 }
 
-#restaurants-list li button {
-  background-color: #996300;
-  border-bottom: 3px solid #eee;
-  color: #fff;
-  display: inline-block;
-  font-size: 1rem;
-  margin: 15px 0 0;
-  padding: 8px 30px 10px;
-  text-align: center;
-  text-decoration: none;
-  text-transform: uppercase;
-}
-
 #restaurants-list .btn-favourite {
   color: gray;
   border: none;
@@ -290,18 +291,33 @@ nav h1 a {
 }
 
 #restaurant-container, 
-#reviews-container {
+#reviews-container,
+#add-review-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 40px 40px 30px;
 }
 
-#reviews-container h3 {
+#reviews-container h3, #add-review-container h3 {
   color: #996300;
   font-size: 2rem;
   font-weight: 300;
   letter-spacing: -1px;
   padding-bottom: 1pt;
+}
+
+#add-review input, #add-review select, #add-review textarea {
+  display: block;
+  padding: 5px;
+  font-size: 1rem;
+}
+
+#add-review input, #add-review select {  
+  margin-bottom: 10px;
+}
+
+#add-review textarea {
+  width: 100%;
 }
 
 #reviews-list {
