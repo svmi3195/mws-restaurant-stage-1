@@ -170,6 +170,14 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
+  const favourite = document.createElement('button');
+  favourite.innerHTML = '❤';
+  favourite.className = 'btn-favourite';
+  favourite.onclick = function(){
+    console.log('favourite');
+  }  
+  li.append(favourite)
+
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
   li.append(neighborhood);
