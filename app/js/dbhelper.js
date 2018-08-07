@@ -10,7 +10,12 @@ class DBHelper {
   static get DATABASE_URL() {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants/`;
-  }  
+  }
+
+  static get DATABASE_URL_REVIEWS() {
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/reviews/`;
+  }
 
   /**
    * Fetch all restaurants.
@@ -24,23 +29,16 @@ class DBHelper {
       })
       .catch(err => {callback(err, null)})
   }
-  /*
-  static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
-      }
-    };
-    xhr.send();
+
+  static fetchReviews(id, callback){
+    fetch(DBHelper.DATABASE_URL_REVIEWS + '?restaurant_id=' + id, {method: 'GET'})
+      .then(res => res.json())
+      .then(data => {
+        callback(null, data);
+      })
+      .catch(err => {callback(err, null)})
   }
-*/
+
   /**
    * Fetch a restaurant by its ID.
    */
