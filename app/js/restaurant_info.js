@@ -1,5 +1,4 @@
 let restaurant;
-let reviews;
 var newMap;
 
 /**
@@ -7,6 +6,7 @@ var newMap;
  */
 document.addEventListener('DOMContentLoaded', (event) => {  
   initMap();
+  fetchReviewsByRestID();
 });
 
 /**
@@ -71,8 +71,7 @@ fetchRestaurantFromURL = (callback) => {
         console.error(error);
         return;
       }
-      fillRestaurantHTML();
-      fetchReviewsByRestID();
+      fillRestaurantHTML();  
       callback(null, restaurant)
     });
   }
@@ -81,9 +80,15 @@ fetchRestaurantFromURL = (callback) => {
 fetchReviewsByRestID = () => {
   if (self.reviews) {
     return self.reviews
-  } else {
-    DBHelper.fetchReviews (self.restaurant.id, function(err, data){
-      console.log(data)
+  } 
+  const id = getParameterByName('id');
+  if(!id){
+    return null
+  }
+  else {
+    DBHelper.fetchReviews (id, function(err, data){
+      self.reviews = data;
+      fillReviewsHTML();
     })
   }
   
@@ -115,8 +120,6 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   if (restaurant.operating_hours) {
     fillRestaurantHoursHTML();
   }
-  // fill reviews
-  fillReviewsHTML();
 }
 
 /**
@@ -142,7 +145,8 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
+  //console.log(reviews)
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h3');
   title.innerHTML = 'Reviews';
@@ -164,14 +168,15 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
 /**
  * Create review HTML and add it to the webpage.
  */
-createReviewHTML = (review) => {
+createReviewHTML = (review) => {  
   const li = document.createElement('li');
   const name = document.createElement('p');
   name.innerHTML = '<strong>' + review.name + '</strong>';
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = review.date;
+  let time = new Date(review.createdAt);
+  date.innerHTML = time.getFullYear() + ', ' + time.getDate() + ' ' + time.getMonth();
   li.appendChild(date);
 
   const rating = document.createElement('p');
