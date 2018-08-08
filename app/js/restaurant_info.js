@@ -1,4 +1,5 @@
 let restaurant;
+let reviews;
 var newMap;
 
 /**
@@ -71,10 +72,22 @@ fetchRestaurantFromURL = (callback) => {
         return;
       }
       fillRestaurantHTML();
+      fetchReviewsByRestID();
       callback(null, restaurant)
     });
   }
 }
+
+fetchReviewsByRestID = () => {
+  if (self.reviews) {
+    return self.reviews
+  } else {
+    DBHelper.fetchReviews (self.restaurant.id, function(err, data){
+      console.log(data)
+    })
+  }
+  
+} 
 
 /**
  * Create restaurant HTML and add it to the webpage
