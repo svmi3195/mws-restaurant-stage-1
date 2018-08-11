@@ -176,7 +176,8 @@ createReviewHTML = (review) => {
 
   const date = document.createElement('p');
   let time = new Date(review.createdAt);
-  date.innerHTML = time.getFullYear() + ', ' + time.getDate() + ' ' + time.getMonth();
+  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  date.innerHTML = `${time.getFullYear()}, ${time.getDate()} ${months[time.getMonth()]}`;
   li.appendChild(date);
 
   const rating = document.createElement('p');
