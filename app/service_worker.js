@@ -1,11 +1,14 @@
 import idb from 'idb';
 const name = 'mws-restaurant-reviews-db';
-const version = 1;
+const version = 2;
 
 const idbPromise = idb.open(name, version, upgradeDB => {
   switch (upgradeDB.oldVersion){
     case 0:
-      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});    
+      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+    case 1:
+      upgradeDB.createObjectStore('reviews', {keyPath: 'id'})
+      .createIndex('restaurant', 'restaurant_id');
   }  
 });
 
