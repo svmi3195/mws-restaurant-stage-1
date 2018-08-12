@@ -58,6 +58,15 @@ self.addEventListener('fetch', function(event) {
       }).then(dataArray => {
         if(store == 'restaurants' && dataArray.length > 0){
           return new Response(JSON.stringify(dataArray));
+        }else if(store == 'reviews' && dataArray.length > 0){
+          const id = event.request.url.slice(event.request.url.indexOf('id=') + 3);
+          let arr = [];
+          for (let i = 0; i <dataArray.length; i++){
+            if(dataArray[i].restaurant_id == id){
+              arr.push(dataArray[i]);
+            }
+          }
+          return new Response(JSON.stringify(arr));
         }else{
           return fetch(event.request)
             .then(response => response.json())
