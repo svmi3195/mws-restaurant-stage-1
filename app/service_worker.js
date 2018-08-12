@@ -5,10 +5,11 @@ const version = 2;
 const idbPromise = idb.open(name, version, upgradeDB => {
   switch (upgradeDB.oldVersion){
     case 0:
-      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'})
+      .createIndex('restaurant_id', 'id');
     case 1:
       upgradeDB.createObjectStore('reviews', {keyPath: 'id'})
-      .createIndex('restaurant', 'restaurant_id');
+      .createIndex('restaurant_id', 'restaurant_id');
   }  
 });
 
@@ -44,29 +45,25 @@ self.addEventListener('fetch', function(event) {
   }
 
   let store;
+  let id;
   if(event.request.url.indexOf('1337/restaurants') != -1){
     store = 'restaurants';
+    id = null;
   }else if(event.request.url.indexOf('1337/reviews') != -1){
     store = 'reviews';
+    id = Number(event.request.url.slice(event.request.url.indexOf('id=') + 3));
   }
 
   if(store){    
     event.respondWith(
       idbPromise.then(db => {
         return db.transaction(store)
-          .objectStore(store).getAll();
+          .objectStore(store)
+          .index('restaurant_id')
+          .getAll(id);
       }).then(dataArray => {
-        if(store == 'restaurants' && dataArray.length > 0){
+        if(dataArray.length > 0){
           return new Response(JSON.stringify(dataArray));
-        }else if(store == 'reviews' && dataArray.length > 0){
-          const id = event.request.url.slice(event.request.url.indexOf('id=') + 3);
-          let arr = [];
-          for (let i = 0; i <dataArray.length; i++){
-            if(dataArray[i].restaurant_id == id){
-              arr.push(dataArray[i]);
-            }
-          }
-          return new Response(JSON.stringify(arr));
         }else{
           return fetch(event.request)
             .then(response => response.json())
