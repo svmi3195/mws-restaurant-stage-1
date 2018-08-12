@@ -64,11 +64,10 @@ self.addEventListener('fetch', function(event) {
             .then(response => response.json())
             .then(data => {
               return idbPromise.then(db => {
-                const tx = db.transaction(store, 'readwrite');
-                tx.objectStore(store).put({
-                  id: store.length,
-                  data: data
-                });
+                const tx = db.transaction(store, 'readwrite');                
+                for(let i =0; i < data.length; i++){
+                  tx.objectStore(store).put(data[i]);
+                }
                 return data;
               })
                 .then(res => {

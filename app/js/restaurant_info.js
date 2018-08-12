@@ -86,7 +86,7 @@ fetchReviewsByRestID = () => {
     return null
   }
   else {
-    DBHelper.fetchReviews (id, function(err, data){
+    DBHelper.fetchReviewsByRestId (id, function(err, data){
       self.reviews = data;
       fillReviewsHTML();
     })

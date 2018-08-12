@@ -30,7 +30,7 @@ class DBHelper {
       .catch(err => {callback(err, null)})
   }
 
-  static fetchReviews(id, callback){
+  static fetchReviewsByRestId(id, callback){
     fetch(DBHelper.DATABASE_URL_REVIEWS + '?restaurant_id=' + id, {method: 'GET'})
       .then(res => res.json())
       .then(data => {
