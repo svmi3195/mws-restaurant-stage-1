@@ -54,7 +54,7 @@ self.addEventListener('fetch', function(event) {
     id = Number(event.request.url.slice(event.request.url.indexOf('id=') + 3));
   }
 
-  if(store){    
+  if(store){ //getting data from IndexedDb stores   
     event.respondWith(
       idbPromise.then(db => {
         return db.transaction(store)
@@ -84,7 +84,7 @@ self.addEventListener('fetch', function(event) {
             }) 
         }
       }));
-  }else{
+  }else{ //getting data from the cache
     event.respondWith(  
       caches.match(chachedReq).then(function(response) {
         return response || fetch(event.request)

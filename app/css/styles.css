@@ -239,6 +239,10 @@ nav h1 a {
   font-size: 2rem;
 }
 
+#restaurants-list .marked {
+  color: red;
+}
+
 /* ====================== Restaurant Details ====================== */
 .inside #map-container {
   background: blue none repeat scroll 0 0;
