@@ -173,13 +173,18 @@ createRestaurantHTML = (restaurant) => {
   const favourite = document.createElement('button');
   favourite.innerHTML = '❤';
   favourite.className = 'btn-favourite';
+  if(restaurant.is_favorite){
+    favourite.classList.add('marked');
+  }
   favourite.onclick = function(){
     if(!restaurant.is_favorite){
       favourite.classList.add('marked');
       restaurant.is_favorite = true;
+      DBHelper.toggleFavourite(restaurant.id, true);
     }else if(restaurant.is_favorite){
       favourite.classList.remove('marked');
       restaurant.is_favorite = false;
+      DBHelper.toggleFavourite(restaurant.id, false);
     }
   }  
   li.append(favourite)
