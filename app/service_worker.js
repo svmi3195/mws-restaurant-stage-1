@@ -44,6 +44,22 @@ self.addEventListener('fetch', function(event) {
     chachedReq = new Request("restaurant.html");
   }
 
+  if(event.request.method == 'PUT'){
+    let id = Number(event.request.url.split('/')[4]);
+    let isFav = event.request.url.split('=')[1] === 'true' ? true : false;
+    idbPromise.then(db => {
+      db.transaction('restaurants', 'readwrite')
+      .objectStore('restaurants')
+      .get(id)
+      .then(restaurant => {
+        restaurant.is_favorite = isFav;
+        db.transaction('restaurants', 'readwrite')
+          .objectStore('restaurants')
+          .put(restaurant)
+      })
+    })
+  }
+
   let store;
   let id;
   if(event.request.url.indexOf('1337/restaurants') != -1){

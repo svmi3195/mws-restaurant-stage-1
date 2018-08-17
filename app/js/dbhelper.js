@@ -41,7 +41,6 @@ class DBHelper {
 
   static toggleFavourite(id, isFav) {
     fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, {method: 'PUT'})
-      .then(console.log('x'))
   }
 
   /**
