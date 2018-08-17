@@ -176,8 +176,10 @@ createRestaurantHTML = (restaurant) => {
   favourite.onclick = function(){
     if(!restaurant.is_favorite){
       favourite.classList.add('marked');
+      restaurant.is_favorite = true;
     }else if(restaurant.is_favorite){
       favourite.classList.remove('marked');
+      restaurant.is_favorite = false;
     }
   }  
   li.append(favourite)
