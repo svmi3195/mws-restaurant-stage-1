@@ -222,7 +222,8 @@ getParameterByName = (name, url) => {
 */
 document.getElementById('add-review').addEventListener('submit', function(event){
   event.preventDefault();
-  console.log('form submitted');
+  event.stopImmediatePropagation ();
+  
 });
 
 
