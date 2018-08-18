@@ -223,9 +223,12 @@ getParameterByName = (name, url) => {
 document.getElementById('add-review').addEventListener('submit', function(event){
   event.preventDefault();
   event.stopImmediatePropagation ();
-  let name = document.getElementById('add-review').elements['0'].value.trim();
-  let score = document.getElementById('add-review').elements['1'].value;
-  let review = document.getElementById('add-review').elements['2'].value.trim();
-  console.log(name, score, review);  
+  let review = {
+    name: document.getElementById('add-review').elements['0'].value.trim(),
+    rating: document.getElementById('add-review').elements['1'].value,
+    comments: document.getElementById('add-review').elements['2'].value.trim(),
+    createdAt: Date.now()
+  }
+  document.getElementById('reviews-list').appendChild(createReviewHTML(review));
 })
 
