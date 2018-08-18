@@ -216,3 +216,13 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+/*
+* On add review form submission
+*/
+document.getElementById('add-review').addEventListener('submit', function(event){
+  event.preventDefault();
+  console.log('form submitted');
+});
+
+
