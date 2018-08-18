@@ -55,7 +55,7 @@
       <h3>Add review</h3>
       <form id="add-review">
         <label>Name:</label>
-        <input type="text" placeholder="your name" required>
+        <input type="text" placeholder="your name" required maxlength="20">
         <label>Score:</label>
         <select>
           <option>5</option>
@@ -65,7 +65,7 @@
           <option>1</option>
         </select>
         <label>Review:</label>
-        <textarea placeholder="your review here" required></textarea>
+        <textarea placeholder="your review here" required maxlength="1000"></textarea>
         <button type="submit">Submit</button>
       </form>
     </section>
