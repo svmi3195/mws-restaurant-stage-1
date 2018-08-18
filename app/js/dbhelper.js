@@ -39,8 +39,17 @@ class DBHelper {
       .catch(err => {callback(err, null)})
   }
 
+  // Mark or unmark restaurant as favourite
   static toggleFavourite(id, isFav) {
     fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, {method: 'PUT'})
+  }
+
+  // Add new review
+  static addReview(review){
+    fetch(DBHelper.DATABASE_URL_REVIEWS, {
+      method: 'POST',
+      body: JSON.stringify(review)
+    })
   }
 
   /**

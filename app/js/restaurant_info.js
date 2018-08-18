@@ -227,8 +227,10 @@ document.getElementById('add-review').addEventListener('submit', function(event)
     name: document.getElementById('add-review').elements['0'].value.trim(),
     rating: document.getElementById('add-review').elements['1'].value,
     comments: document.getElementById('add-review').elements['2'].value.trim(),
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    restaurant_id: self.restaurant.id
   }
-  document.getElementById('reviews-list').appendChild(createReviewHTML(review));
+  document.getElementById('reviews-list').appendChild(createReviewHTML(review));  
+  DBHelper.addReview(review);
 })
 
