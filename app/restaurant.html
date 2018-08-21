@@ -54,18 +54,18 @@
     <section id="add-review-container">
       <h3>Add review</h3>
       <form id="add-review">
-        <label>Name:</label>
-        <input type="text" placeholder="your name" required maxlength="20">
-        <label>Score:</label>
-        <select>
-          <option>5</option>
-          <option>4</option>
-          <option>3</option>
-          <option>2</option>
-          <option>1</option>
+        <label id="name">Your name:</label>
+        <input type="text" placeholder="your name" required maxlength="20" aria-labelledby="name">
+        <label id="score">Score:</label>
+        <select aria-labelledby="score">
+          <option value="5" selected>5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
         </select>
-        <label>Review:</label>
-        <textarea placeholder="your review here" required maxlength="1000"></textarea>
+        <label id="review">Your review:</label>
+        <textarea placeholder="your review here" required maxlength="1000" aria-labelledby="review"></textarea>
         <button type="submit">Submit</button>
       </form>
     </section>
