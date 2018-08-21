@@ -28,8 +28,8 @@ self.addEventListener('fetch', function(event) {
   if(event.request.url.indexOf('restaurant.html') != -1){
     chachedReq = new Request("restaurant.html");
   }  
-
- //getting data from the cache
+  if(event.request.method == 'GET'){
+    //getting data from the cache
     event.respondWith(  
       caches.match(chachedReq).then(function(response) {
         return response || fetch(event.request)
@@ -45,6 +45,6 @@ self.addEventListener('fetch', function(event) {
         })
       })
     );
-    
+  }    
 });
   

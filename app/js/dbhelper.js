@@ -7,8 +7,7 @@ const idbPromise = idb.open(name, version, upgradeDB => {
   console.log('starting idb')
   switch (upgradeDB.oldVersion){
     case 0:
-      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'})
-      .createIndex('restaurant_id', 'id');
+      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
     case 1:
       upgradeDB.createObjectStore('reviews', {keyPath: 'id'})
       .createIndex('restaurant_id', 'restaurant_id');
@@ -36,10 +35,36 @@ class DBHelper {
 
   /**
    * Fetch all restaurants.
+   * If idb data exists fetch it, if no - fetch from remote server and put it into idb store.
    */
-
   static fetchRestaurants(callback){
-    fetch(DBHelper.DATABASE_URL, {method: 'GET'})
+    idbPromise.then(db => {
+      return db.transaction('restaurants')
+        .objectStore('restaurants')
+        .getAll();
+    }).then(dataArray => {
+      if(dataArray.length > 0){
+        return new Response(JSON.stringify(dataArray));
+      }else{
+        return fetch(DBHelper.DATABASE_URL, {method: 'GET'})
+          .then(response => response.json())
+          .then(data => {
+            return idbPromise.then(db => {
+              const tx = db.transaction('restaurants', 'readwrite');                
+              for(let i =0; i < data.length; i++){
+                tx.objectStore('restaurants').put(data[i]);
+              }
+              return data;
+            })
+              .then(res => {
+                return new Response(JSON.stringify(res))
+              })
+          })
+          .catch(err => {
+            return new Response('Error fetching from the server: ' + err)
+          }) 
+      }
+    })
       .then(res => res.json())
       .then(data => {
         callback(null, data);
@@ -48,7 +73,34 @@ class DBHelper {
   }
 
   static fetchReviewsByRestId(id, callback){
-    fetch(DBHelper.DATABASE_URL_REVIEWS + '?restaurant_id=' + id, {method: 'GET'})
+    idbPromise.then(db => {
+      return db.transaction('reviews')
+        .objectStore('reviews')
+        .index('restaurant_id')
+        .getAll(id);
+    }).then(dataArray => {
+      if(dataArray.length > 0){
+        return new Response(JSON.stringify(dataArray));
+      }else{
+        return fetch(DBHelper.DATABASE_URL_REVIEWS + '?restaurant_id=' + id, {method: 'GET'})
+          .then(response => response.json())
+          .then(data => {
+            return idbPromise.then(db => {
+              const tx = db.transaction('reviews', 'readwrite');                
+              for(let i =0; i < data.length; i++){
+                tx.objectStore('reviews').put(data[i]);
+              }
+              return data;
+            })
+              .then(res => {
+                return new Response(JSON.stringify(res))
+              })
+          })
+          .catch(err => {
+            return new Response('Error fetching from the server: ' + err)
+          }) 
+      }
+    })
       .then(res => res.json())
       .then(data => {
         callback(null, data);
@@ -58,6 +110,7 @@ class DBHelper {
 
   // Mark or unmark restaurant as favourite
   static toggleFavourite(id, isFav) {
+    console.log(idbPromise)
     //send data to remote db
     fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, {method: 'PUT'})
     //updata data in IndexedDB
@@ -231,51 +284,3 @@ class DBHelper {
   } */
 
 }
-/*
-addEventListener('fetch', event => {
-  if (event.request.method != 'GET') return;
-
-  let store;
-  let id;
-  if(event.request.url.indexOf('1337/restaurants') != -1){
-    store = 'restaurants';
-    id = null;
-  }else if(event.request.url.indexOf('1337/reviews') != -1){
-    store = 'reviews';
-    id = Number(event.request.url.slice(event.request.url.indexOf('id=') + 3));
-  }
-
-  if(store){ //getting data from IndexedDb stores   
-    event.respondWith(
-      idbPromise.then(db => {
-        return db.transaction(store)
-          .objectStore(store)
-          .index('restaurant_id')
-          .getAll(id);
-      }).then(dataArray => {
-        if(dataArray.length > 0){
-          return new Response(JSON.stringify(dataArray));
-        }else{
-          return fetch(event.request)
-            .then(response => response.json())
-            .then(data => {
-              return idbPromise.then(db => {
-                const tx = db.transaction(store, 'readwrite');                
-                for(let i =0; i < data.length; i++){
-                  tx.objectStore(store).put(data[i]);
-                }
-                return data;
-              })
-                .then(res => {
-                  return new Response(JSON.stringify(res))
-                })
-            })
-            .catch(err => {
-              return new Response('Error fetching from the server: ' + err)
-            }) 
-        }
-      }));
-  }
-
-
-})*/
