@@ -1,3 +1,20 @@
+// Create IndexedDB database with restaurants and reviews stores
+
+const name = 'mws-restaurant-reviews-db';
+const version = 2;
+
+const idbPromise = idb.open(name, version, upgradeDB => {
+  console.log('starting idb')
+  switch (upgradeDB.oldVersion){
+    case 0:
+      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'})
+      .createIndex('restaurant_id', 'id');
+    case 1:
+      upgradeDB.createObjectStore('reviews', {keyPath: 'id'})
+      .createIndex('restaurant_id', 'restaurant_id');
+  }  
+});
+
 /**
  * Common database helper functions.
  */
@@ -41,7 +58,22 @@ class DBHelper {
 
   // Mark or unmark restaurant as favourite
   static toggleFavourite(id, isFav) {
+    //send data to remote db
     fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, {method: 'PUT'})
+    //updata data in IndexedDB
+    .then(
+      idbPromise.then(db => {
+        db.transaction('restaurants', 'readwrite')
+        .objectStore('restaurants')
+        .get(id)
+        .then(restaurant => {
+          restaurant.is_favorite = isFav;
+          db.transaction('restaurants', 'readwrite')
+            .objectStore('restaurants')
+            .put(restaurant)
+        })
+      })
+    )
   }
 
   // Add new review
@@ -199,3 +231,51 @@ class DBHelper {
   } */
 
 }
+/*
+addEventListener('fetch', event => {
+  if (event.request.method != 'GET') return;
+
+  let store;
+  let id;
+  if(event.request.url.indexOf('1337/restaurants') != -1){
+    store = 'restaurants';
+    id = null;
+  }else if(event.request.url.indexOf('1337/reviews') != -1){
+    store = 'reviews';
+    id = Number(event.request.url.slice(event.request.url.indexOf('id=') + 3));
+  }
+
+  if(store){ //getting data from IndexedDb stores   
+    event.respondWith(
+      idbPromise.then(db => {
+        return db.transaction(store)
+          .objectStore(store)
+          .index('restaurant_id')
+          .getAll(id);
+      }).then(dataArray => {
+        if(dataArray.length > 0){
+          return new Response(JSON.stringify(dataArray));
+        }else{
+          return fetch(event.request)
+            .then(response => response.json())
+            .then(data => {
+              return idbPromise.then(db => {
+                const tx = db.transaction(store, 'readwrite');                
+                for(let i =0; i < data.length; i++){
+                  tx.objectStore(store).put(data[i]);
+                }
+                return data;
+              })
+                .then(res => {
+                  return new Response(JSON.stringify(res))
+                })
+            })
+            .catch(err => {
+              return new Response('Error fetching from the server: ' + err)
+            }) 
+        }
+      }));
+  }
+
+
+})*/

@@ -2,9 +2,9 @@ const path = require('path')
 
 module.exports = {
   mode: 'development',
-  entry: './app/service_worker.js',
+  entry: './app/js/main.js',
   output: {
-    filename: 'bundled_sw.js',
+    filename: 'js/bundle.js',
     path: path.resolve(__dirname, 'app')
   },
   devServer: {
