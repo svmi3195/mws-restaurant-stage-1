@@ -175,14 +175,19 @@ createRestaurantHTML = (restaurant) => {
   favourite.className = 'btn-favourite';
   if(restaurant.is_favorite){
     favourite.classList.add('marked');
+    favourite.setAttribute('aria-label', 'remove favourite mark');
+  }else{
+    favourite.setAttribute('aria-label', 'mark as favourite');
   }
   favourite.onclick = function(){
     if(!restaurant.is_favorite){
       favourite.classList.add('marked');
+      favourite.setAttribute('aria-label', 'remove favourite mark');
       restaurant.is_favorite = true;
-      DBHelper.toggleFavourite(restaurant.id, true);
+      DBHelper.toggleFavourite(restaurant.id, true);      
     }else if(restaurant.is_favorite){
       favourite.classList.remove('marked');
+      favourite.setAttribute('aria-label', 'mark as favourite');
       restaurant.is_favorite = false;
       DBHelper.toggleFavourite(restaurant.id, false);
     }
