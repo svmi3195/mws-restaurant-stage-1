@@ -47,4 +47,10 @@ self.addEventListener('fetch', function(event) {
     );
   }    
 });
-  
+
+self.addEventListener('sync', function(event) {
+  if (event.tag == 'sync') {
+    event.waitUntil(sendData());
+  }
+});
+
