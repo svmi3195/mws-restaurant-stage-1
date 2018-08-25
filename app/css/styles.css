@@ -73,7 +73,7 @@ section {
 
 #footer {
   background-color: #444;
-  color: #aaa;
+  color: #f3f3f3;
   font-size: 0.75rem;
   letter-spacing: 1px;
   padding: 25px 0;
@@ -136,7 +136,7 @@ nav h1 a {
 
 /* Add a color to all links inside the list */
 #breadcrumb li a {
-  color: #0275d8;
+  color: #1b6698;
   text-decoration: none;
 }
 
