@@ -107,12 +107,12 @@ class DBHelper {
       .catch(err => { callback(err, null) })
   }
 
-  // Mark or unmark restaurant as favourite
-  static toggleFavourite(id, isFav) {
+  // Mark or unmark restaurant as favorite
+  static togglefavorite(id, isFav) {
     //send data to remote db
     fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, { method: 'PUT' })
       //updata data in IndexedDB
-      .then(
+      .then(() => {
         idbPromise.then(db => {
           db.transaction('restaurants', 'readwrite')
             .objectStore('restaurants')
@@ -124,6 +124,7 @@ class DBHelper {
                 .put(restaurant)
             })
         })
+      }
       )
   }
 

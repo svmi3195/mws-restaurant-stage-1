@@ -170,29 +170,38 @@ createRestaurantHTML = (restaurant) => {
   name.innerHTML = restaurant.name;
   li.append(name);
 
-  const favourite = document.createElement('button');
-  favourite.innerHTML = '❤';
-  favourite.className = 'btn-favourite';
-  if(restaurant.is_favorite){
-    favourite.classList.add('marked');
-    favourite.setAttribute('aria-label', 'remove favourite mark');
+  const favorite = document.createElement('button');
+  favorite.innerHTML = '❤';
+  favorite.className = 'btn-favorite';
+
+  //fix parsing boolean and strings
+  if(restaurant.is_favorite === 'true' || restaurant.is_favorite === true){
+    restaurant.is_favorite = true;
   }else{
-    favourite.setAttribute('aria-label', 'mark as favourite');
+    restaurant.is_favorite = false;
   }
-  favourite.onclick = function(){
+
+  if(restaurant.is_favorite){
+    favorite.classList.add('marked');
+    favorite.setAttribute('aria-label', 'remove favorite mark');
+  }else{
+    favorite.setAttribute('aria-label', 'mark as favorite');
+  }
+  
+  favorite.onclick = function(){
     if(!restaurant.is_favorite){
-      favourite.classList.add('marked');
-      favourite.setAttribute('aria-label', 'remove favourite mark');
+      favorite.classList.add('marked');
+      favorite.setAttribute('aria-label', 'remove favorite mark');
       restaurant.is_favorite = true;
-      DBHelper.toggleFavourite(restaurant.id, true);      
+      DBHelper.togglefavorite(restaurant.id, true);      
     }else if(restaurant.is_favorite){
-      favourite.classList.remove('marked');
-      favourite.setAttribute('aria-label', 'mark as favourite');
+      favorite.classList.remove('marked');
+      favorite.setAttribute('aria-label', 'mark as favorite');
       restaurant.is_favorite = false;
-      DBHelper.toggleFavourite(restaurant.id, false);
+      DBHelper.togglefavorite(restaurant.id, false);
     }
   }  
-  li.append(favourite)
+  li.append(favorite)
 
   const neighborhood = document.createElement('p');
   neighborhood.innerHTML = restaurant.neighborhood;
