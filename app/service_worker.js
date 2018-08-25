@@ -10,6 +10,7 @@ self.addEventListener('install', function (event) {
           '/restaurant.html',
           '/css/styles.css',
           '/js/dbhelper.js',
+          '/js/idb.js',
           '/js/main.js',
           '/js/register.js',
           '/js/restaurant_info.js'
@@ -65,7 +66,7 @@ function sendData() {
       let data = event.target.result;
       if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
-          fetch(data[i][0], data[i][1]).then(() => {
+          fetch(data[i][0], JSON.parse(data[i][1])).then(() => {
             db.transaction(['temp'], "readwrite").objectStore('temp').delete(data[i].id);
           })
         }
