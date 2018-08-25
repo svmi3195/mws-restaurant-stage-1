@@ -156,7 +156,7 @@ class DBHelper {
               .then(reviews => {
                 db.transaction('temp', 'readwrite')
                   .objectStore('temp')
-                  .add([url, options])
+                  .add([url, JSON.stringify(options)])
               })
           })
         })
