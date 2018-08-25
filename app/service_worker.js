@@ -55,13 +55,23 @@ self.addEventListener('sync', function (event) {
 });
 
 function sendData() {
-  console.log('sync')
   let dbOpen = indexedDB.open('mws-restaurant-reviews-db');
   dbOpen.onerror = function(){return;}
   dbOpen.onsuccess = function(event){
     let db = event.target.result;
-    let store = db.transaction(['temp']).objectStore('temp')
-    console.log('opened temp')
-    console.log(store)
+    let store = db.transaction(['temp']).objectStore('temp');
+    let getData = store.getAll();
+    getData.onerror = function(){return;}
+    getData.onsuccess = function(event){
+      let data = event.target.result;
+      for(let i = 0; i < data.length; i++){
+        console.log(data[i])
+        fetch('http://localhost:1337/reviews/', {
+          method: 'POST',
+          body: JSON.stringify(data[i]),
+          headers: new Headers({'Content-type': 'application/json'})
+        }).then(response => {console.log(response.ok)})
+      }
+    }
   }
 }
