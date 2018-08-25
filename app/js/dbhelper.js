@@ -1,15 +1,13 @@
 // Create IndexedDB database with restaurants and reviews stores
-
 const name = 'mws-restaurant-reviews-db';
 const version = 2;
 
 const idbPromise = idb.open(name, version, upgradeDB => {
-  console.log('starting idb')
   switch (upgradeDB.oldVersion){
     case 0:
       upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
     case 1:
-      upgradeDB.createObjectStore('reviews', {keyPath: 'id'})
+      upgradeDB.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true})
       .createIndex('restaurant_id', 'restaurant_id');
   }  
 });
@@ -110,7 +108,6 @@ class DBHelper {
 
   // Mark or unmark restaurant as favourite
   static toggleFavourite(id, isFav) {
-    console.log(idbPromise)
     //send data to remote db
     fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, {method: 'PUT'})
     //updata data in IndexedDB
@@ -131,9 +128,24 @@ class DBHelper {
 
   // Add new review
   static addReview(review){
+    //send data to remote db
     fetch(DBHelper.DATABASE_URL_REVIEWS, {
       method: 'POST',
-      body: JSON.stringify(review)
+      body: JSON.stringify(review),
+      headers: new Headers({'Content-type': 'application/json'})
+    }).then( response => {
+      if(response.ok){
+        idbPromise.then(db => {
+          db.transaction('reviews', 'readwrite')
+          .objectStore('reviews')
+          .getAll()
+          .then(reviews => {
+            db.transaction('reviews', 'readwrite')
+              .objectStore('reviews')
+              .add(review)
+          })
+        })
+      }
     })
   }
 

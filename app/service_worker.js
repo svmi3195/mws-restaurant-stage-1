@@ -54,3 +54,6 @@ self.addEventListener('sync', function(event) {
   }
 });
 
+function sendData(){
+  
+}
