@@ -130,6 +130,12 @@ class DBHelper {
 
   // Add new review
   static addReview(review){
+    let url = DBHelper.DATABASE_URL_REVIEWS;
+    let options = {
+      method: 'POST',
+      body: JSON.stringify(review),
+      headers: new Headers({'Content-type': 'application/json'})
+    };
     //add data to IndexedDb
     idbPromise.then(db => {
       db.transaction('reviews', 'readwrite')
@@ -142,11 +148,7 @@ class DBHelper {
       })
     })
     //send data to remote db
-    .then(fetch(DBHelper.DATABASE_URL_REVIEWS, {
-      method: 'POST',
-      body: JSON.stringify(review),
-      headers: new Headers({'Content-type': 'application/json'})
-    })
+    .then(fetch(url, options)
     .catch(() => {
       idbPromise.then(db => {
         db.transaction('temp', 'readwrite')
@@ -155,7 +157,7 @@ class DBHelper {
         .then(reviews => {
           db.transaction('temp', 'readwrite')
             .objectStore('temp')
-            .add(review)
+            .add([url, options])
         })
       })
     })
