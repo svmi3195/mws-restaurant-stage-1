@@ -148,8 +148,16 @@ class DBHelper {
       headers: new Headers({'Content-type': 'application/json'})
     })
     .catch(() => {
-      localStorage.setItem('rr-review', JSON.stringify(review));
-      localStorage.setItem('rr-url', JSON.stringify(DBHelper.DATABASE_URL_REVIEWS));
+      idbPromise.then(db => {
+        db.transaction('temp', 'readwrite')
+        .objectStore('temp')
+        .getAll()
+        .then(reviews => {
+          db.transaction('temp', 'readwrite')
+            .objectStore('temp')
+            .add(review)
+        })
+      })
     })
   )
   }
