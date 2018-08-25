@@ -3,15 +3,15 @@ const name = 'mws-restaurant-reviews-db';
 const version = 2;
 
 const idbPromise = idb.open(name, version, upgradeDB => {
-  switch (upgradeDB.oldVersion){
+  switch (upgradeDB.oldVersion) {
     case 0:
-      upgradeDB.createObjectStore('restaurants', {keyPath: 'id'});
+      upgradeDB.createObjectStore('restaurants', { keyPath: 'id' });
     case 1:
-      upgradeDB.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true})
-      .createIndex('restaurant_id', 'restaurant_id');
+      upgradeDB.createObjectStore('reviews', { keyPath: 'id', autoIncrement: true })
+        .createIndex('restaurant_id', 'restaurant_id');
     case 2:
-      upgradeDB.createObjectStore('temp', {keyPath: 'id', autoIncrement: true})  
-  }  
+      upgradeDB.createObjectStore('temp', { keyPath: 'id', autoIncrement: true })
+  }
 });
 
 /**
@@ -35,133 +35,132 @@ class DBHelper {
 
   /**
    * Fetch all restaurants.
-   * If idb data exists fetch it, if no - fetch from remote server and put it into idb store.
+   * Fetch from remote server and put data it into idb store, if unsuccessful - try to fetch data from idb store.
    */
-  static fetchRestaurants(callback){
-    idbPromise.then(db => {
-      return db.transaction('restaurants')
-        .objectStore('restaurants')
-        .getAll();
-    }).then(dataArray => {
-      if(dataArray.length > 0){
-        return new Response(JSON.stringify(dataArray));
-      }else{
-        return fetch(DBHelper.DATABASE_URL, {method: 'GET'})
-          .then(response => response.json())
-          .then(data => {
-            return idbPromise.then(db => {
-              const tx = db.transaction('restaurants', 'readwrite');                
-              for(let i =0; i < data.length; i++){
-                tx.objectStore('restaurants').put(data[i]);
-              }
-              return data;
-            })
-              .then(res => {
-                return new Response(JSON.stringify(res))
-              })
+  static fetchRestaurants(callback) {
+    fetch(DBHelper.DATABASE_URL, { method: 'GET' })
+      .then(response => response.json())
+      .then(data => {
+        return idbPromise.then(db => {
+          const tx = db.transaction('restaurants', 'readwrite');
+          for (let i = 0; i < data.length; i++) {
+            tx.objectStore('restaurants').put(data[i]);
+          }
+          return data;
+        })
+          .then(res => {
+            return new Response(JSON.stringify(res))
           })
-          .catch(err => {
-            return new Response('Error fetching from the server: ' + err)
-          }) 
-      }
-    })
+      })
+      .catch(err => {
+        idbPromise.then(db => {
+          return db.transaction('restaurants')
+            .objectStore('restaurants')
+            .getAll();
+        }).then(dataArray => {
+          if (dataArray.length > 0) {
+            return new Response(JSON.stringify(dataArray));
+          }
+        })
+      })
       .then(res => res.json())
       .then(data => {
         callback(null, data);
       })
-      .catch(err => {callback(err, null)})
+      .catch(err => { callback(err, null) })
   }
 
-  static fetchReviewsByRestId(id, callback){
-    idbPromise.then(db => {
-      return db.transaction('reviews')
-        .objectStore('reviews')
-        .index('restaurant_id')
-        .getAll(id);
-    }).then(dataArray => {
-      if(dataArray.length > 0){
-        return new Response(JSON.stringify(dataArray));
-      }else{
-        return fetch(DBHelper.DATABASE_URL_REVIEWS + '?restaurant_id=' + id, {method: 'GET'})
-          .then(response => response.json())
-          .then(data => {
-            return idbPromise.then(db => {
-              const tx = db.transaction('reviews', 'readwrite');                
-              for(let i =0; i < data.length; i++){
-                tx.objectStore('reviews').put(data[i]);
-              }
-              return data;
-            })
-              .then(res => {
-                return new Response(JSON.stringify(res))
-              })
+  /**
+     * Fetch reviews for a restaurant.
+     * Fetch from remote server and put data it into idb store, if unsuccessful - try to fetch data from idb store.
+     */
+  static fetchReviewsByRestId(id, callback) {
+    fetch(DBHelper.DATABASE_URL_REVIEWS + '?restaurant_id=' + id, { method: 'GET' })
+      .then(response => response.json())
+      .then(data => {
+        return idbPromise.then(db => {
+          const tx = db.transaction('reviews', 'readwrite');
+          for (let i = 0; i < data.length; i++) {
+            tx.objectStore('reviews').put(data[i]);
+          }
+          return data;
+        })
+          .then(res => {
+            return new Response(JSON.stringify(res))
           })
-          .catch(err => {
-            return new Response('Error fetching from the server: ' + err)
-          }) 
-      }
-    })
+      })
+      .catch(err => {
+        db.transaction('reviews')
+          .objectStore('reviews')
+          .index('restaurant_id')
+          .getAll(id)
+          .then(dataArray => {
+            if (dataArray.length > 0) {
+              return new Response(JSON.stringify(dataArray));
+            }
+          })
+      })
       .then(res => res.json())
       .then(data => {
         callback(null, data);
       })
-      .catch(err => {callback(err, null)})
+      .catch(err => { callback(err, null) })
   }
 
   // Mark or unmark restaurant as favourite
   static toggleFavourite(id, isFav) {
     //send data to remote db
-    fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, {method: 'PUT'})
-    //updata data in IndexedDB
-    .then(
-      idbPromise.then(db => {
-        db.transaction('restaurants', 'readwrite')
-        .objectStore('restaurants')
-        .get(id)
-        .then(restaurant => {
-          restaurant.is_favorite = isFav;
+    fetch(DBHelper.DATABASE_URL + id + '/?is_favorite=' + isFav, { method: 'PUT' })
+      //updata data in IndexedDB
+      .then(
+        idbPromise.then(db => {
           db.transaction('restaurants', 'readwrite')
             .objectStore('restaurants')
-            .put(restaurant)
+            .get(id)
+            .then(restaurant => {
+              restaurant.is_favorite = isFav;
+              db.transaction('restaurants', 'readwrite')
+                .objectStore('restaurants')
+                .put(restaurant)
+            })
         })
-      })
-    )
+      )
   }
 
   // Add new review
-  static addReview(review){
+  static addReview(review) {
     let url = DBHelper.DATABASE_URL_REVIEWS;
     let options = {
       method: 'POST',
       body: JSON.stringify(review),
-      headers: new Headers({'Content-type': 'application/json'})
+      headers: new Headers({ 'Content-type': 'application/json' })
     };
     //add data to IndexedDb
     idbPromise.then(db => {
       db.transaction('reviews', 'readwrite')
-      .objectStore('reviews')
-      .getAll()
-      .then(reviews => {
-        db.transaction('reviews', 'readwrite')
-          .objectStore('reviews')
-          .add(review)
-      })
-    })
-    //send data to remote db
-    .then(fetch(url, options)
-    .catch(() => {
-      idbPromise.then(db => {
-        db.transaction('temp', 'readwrite')
-        .objectStore('temp')
+        .objectStore('reviews')
         .getAll()
         .then(reviews => {
-          db.transaction('temp', 'readwrite')
-            .objectStore('temp')
-            .add([url, options])
+          db.transaction('reviews', 'readwrite')
+            .objectStore('reviews')
+            .add(review)
         })
-      })
     })
-  )
+      //send data to remote db
+      .then(fetch(url, options)
+        .catch(() => {
+          idbPromise.then(db => {
+            db.transaction('temp', 'readwrite')
+              .objectStore('temp')
+              .getAll()
+              .then(reviews => {
+                db.transaction('temp', 'readwrite')
+                  .objectStore('temp')
+                  .add([url, options])
+              })
+          })
+        })
+      )
   }
 
   /**
@@ -289,16 +288,17 @@ class DBHelper {
   /**
    * Map marker for a restaurant.
    */
-   static mapMarkerForRestaurant(restaurant, map) {
+  static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker  
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-      {title: restaurant.name,
-      alt: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant)
+      {
+        title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
       })
-      marker.addTo(newMap);
+    marker.addTo(newMap);
     return marker;
-  } 
+  }
   /* static mapMarkerForRestaurant(restaurant, map) {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,
