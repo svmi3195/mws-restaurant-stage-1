@@ -9,6 +9,8 @@ const idbPromise = idb.open(name, version, upgradeDB => {
     case 1:
       upgradeDB.createObjectStore('reviews', {keyPath: 'id', autoIncrement: true})
       .createIndex('restaurant_id', 'restaurant_id');
+    case 2:
+      upgradeDB.createObjectStore('temp', {keyPath: 'id', autoIncrement: true})  
   }  
 });
 
@@ -128,25 +130,28 @@ class DBHelper {
 
   // Add new review
   static addReview(review){
+    //add data to IndexedDb
+    idbPromise.then(db => {
+      db.transaction('reviews', 'readwrite')
+      .objectStore('reviews')
+      .getAll()
+      .then(reviews => {
+        db.transaction('reviews', 'readwrite')
+          .objectStore('reviews')
+          .add(review)
+      })
+    })
     //send data to remote db
-    fetch(DBHelper.DATABASE_URL_REVIEWS, {
+    .then(fetch(DBHelper.DATABASE_URL_REVIEWS, {
       method: 'POST',
       body: JSON.stringify(review),
       headers: new Headers({'Content-type': 'application/json'})
-    }).then( response => {
-      if(response.ok){
-        idbPromise.then(db => {
-          db.transaction('reviews', 'readwrite')
-          .objectStore('reviews')
-          .getAll()
-          .then(reviews => {
-            db.transaction('reviews', 'readwrite')
-              .objectStore('reviews')
-              .add(review)
-          })
-        })
-      }
     })
+    .catch(() => {
+      localStorage.setItem('rr-review', JSON.stringify(review));
+      localStorage.setItem('rr-url', JSON.stringify(DBHelper.DATABASE_URL_REVIEWS));
+    })
+  )
   }
 
   /**
