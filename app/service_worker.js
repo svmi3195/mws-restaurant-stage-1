@@ -67,7 +67,7 @@ function sendData() {
       if (data.length > 0) {
         for (let i = 0; i < data.length; i++) {
           fetch(data[i][0], JSON.parse(data[i][1])).then(() => {
-            db.transaction(['temp'], "readwrite").objectStore('temp').delete(data[i].id);
+            db.transaction(['temp'], "readwrite").objectStore('temp').delete(data[i][1].id);
           })
         }
       }
