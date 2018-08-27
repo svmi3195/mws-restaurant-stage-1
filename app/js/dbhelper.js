@@ -35,7 +35,7 @@ class DBHelper {
 
   /**
    * Fetch all restaurants.
-   * Fetch from remote server and put data it into idb store, if unsuccessful - try to fetch data from idb store.
+   * Fetch from remote server and put data into idb store, if unsuccessful - try to fetch data from idb store.
    */
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL, { method: 'GET' })
@@ -72,7 +72,7 @@ class DBHelper {
 
   /**
      * Fetch reviews for a restaurant.
-     * Fetch from remote server and put data it into idb store, if unsuccessful - try to fetch data from idb store.
+     * Fetch from remote server and put data into idb store, if unsuccessful - try to fetch data from idb store.
      */
   static fetchReviewsByRestId(id, callback) {
     fetch(DBHelper.DATABASE_URL_REVIEWS + '?restaurant_id=' + id, { method: 'GET' })
@@ -150,6 +150,7 @@ class DBHelper {
       //send data to remote db
       .then(fetch(url, options)
         .catch(() => {
+          //if attempt to send unsuccesful add to temp store in idb
           idbPromise.then(db => {
             db.transaction('temp', 'readwrite')
               .objectStore('temp')
